@@ -14,10 +14,13 @@ Device Manager Application is a Spring Web application to manage TELECOM devices
 ```bash
 mvn clean package
 ```
+
 3. Run the executable jar file:
-   ```bash
-   java -jar target/devicemanager-0.0.1-SNAPSHOT-exec.jar
-   ```
+   
+```bash
+java -jar target/devicemanager-0.0.1-SNAPSHOT-exec.jar
+```
+
 4. Access the web service through the url [http://localhost:8080/devicemanager/](http://localhost:8080/devicemanager/)
 
 ## Usage
