@@ -4,7 +4,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +21,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.global1.devicemanager.DevicemanagerApplication;
 import com.global1.devicemanager.model.Device;
@@ -130,7 +133,7 @@ class DevicemanagerControllerTests {
         .andExpect(jsonPath("$", hasSize(2)))
         .andReturn().getResponse().getContentAsString();
 
-        assertEquals(devicesInDatabase, mapper.readValue(response, List.class));
+        assertEquals(devicesInDatabase, mapper.readValue(response, new TypeReference<List<Device>>(){}));
 	}
 
     @Test
@@ -139,15 +142,17 @@ class DevicemanagerControllerTests {
 		//given
         String brand = "Samsung";
         String name = "S8";
-        Device device = new Device(name, brand);
+        Device device = new Device(1L, name, brand, Instant.now());
 		
 		//when
         String jsonContent = mapper.writeValueAsString(device);
-		
+		when(service.addDevice(device)).thenReturn(device);
+
 		//assert
 		mocker.perform(post(BASE_URL + "/")
         .contentType(MediaType.APPLICATION_JSON)
-        .content(jsonContent))
+        .content(jsonContent)
+        .accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.brand").value(brand))
         .andExpect(jsonPath("$.name").value(name));

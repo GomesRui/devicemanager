@@ -16,16 +16,17 @@ import jakarta.persistence.Temporal;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Table(name = "TBL_DEVICES")
-@Getter @NoArgsConstructor
+@Getter @NoArgsConstructor @AllArgsConstructor
 public class Device {  
     @Id 
-	@GeneratedValue(strategy = GenerationType.AUTO) 
+	@GeneratedValue(strategy = GenerationType.SEQUENCE) 
 	private Long id;
 
     @Setter 
@@ -68,17 +69,12 @@ public class Device {
 		if (getClass() != obj.getClass())
 			return false;
 		Device other = (Device) obj;
-		if (name == null) {
-			if (other.name != null)
-				return false;
-		} else if (!name.equals(other.name))
-			return false;
-		if (brand == null) {
-			if (other.brand != null)
-				return false;
-		} else if (!brand.equals(other.brand))
-			return false;
-		return true;
+		if (other.id == this.id)
+			return true;
+		else
+			if (other.brand == this.brand && other.name == this.name)
+				return true;
+		return false;
 	}
 
     
