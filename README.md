@@ -20,7 +20,7 @@ mvn clean package
 ## Usage
 
 When the application starts, the database (H2 memory) will be empty so it is important it is filled up properly, using the POST method:
-`REQUEST: POST http://localhost:8080/api/v1/devicemanager/
+REQUEST: `POST http://localhost:8080/api/v1/devicemanager/
 BODY: {
     "name": "S8",
     "brand": "Samsung"
@@ -28,21 +28,21 @@ BODY: {
 
 Afterwards, multiple operations can be done:
 - READ:
-  _`REQUEST ALL: GET http://localhost:8080/api/v1/devicemanager/`
-  _`REQUEST ID: GET http://localhost:8080/api/v1/devicemanager/{id}`
-  _`REQUEST BRAND: GET http://localhost:8080/api/v1/devicemanager/search?brand={brand}`
+  REQUEST ALL: `GET http://localhost:8080/api/v1/devicemanager/`
+  REQUEST ID: `GET http://localhost:8080/api/v1/devicemanager/{id}`
+  REQUEST BRAND: `GET http://localhost:8080/api/v1/devicemanager/search?brand={brand}`
 - UPDATE:
-  _`REQUEST FULL: PUT http://localhost:8080/api/v1/devicemanager/{id}
+  REQUEST FULL: `PUT http://localhost:8080/api/v1/devicemanager/{id}
            BODY: {
              "name": "S8",
              "brand": "Samsung"
          }`
-  _`REQUEST PARTIAL: PATCH http://localhost:8080/api/v1/devicemanager/{id}
+  REQUEST PARTIAL: `PATCH http://localhost:8080/api/v1/devicemanager/{id}
            BODY: {
              "name": "S8",
          }`
 - DELETE
-  _`REQUEST: DELETE http://localhost:8080/api/v1/devicemanager/{id}`
+  REQUEST: `DELETE http://localhost:8080/api/v1/devicemanager/{id}`
 
 To further explore the application functionalities, you can access the swagger UI [http://localhost:8080/api-ui](link) 
 
