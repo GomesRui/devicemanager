@@ -44,7 +44,7 @@ Afterwards, multiple operations can be done:
 - DELETE
   - REQUEST: `DELETE http://localhost:8080/api/v1/devicemanager/{id}`
 
-To further explore the application functionalities, you can access the swagger UI [http://localhost:8080/api-ui](link) 
+To further explore the application functionalities, you can access the swagger UI [link](http://localhost:8080/api-ui)
 
 ## Roadmap
 
