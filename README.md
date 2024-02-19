@@ -28,21 +28,21 @@ BODY: {
 
 Afterwards, multiple operations can be done:
 - READ:
-  _REQUEST ALL: GET http://localhost:8080/api/v1/devicemanager/
-  _REQUEST ID: GET http://localhost:8080/api/v1/devicemanager/{id}
-  _REQUEST BRAND: GET http://localhost:8080/api/v1/devicemanager/search?brand={brand}
+  _`REQUEST ALL: GET http://localhost:8080/api/v1/devicemanager/`
+  _`REQUEST ID: GET http://localhost:8080/api/v1/devicemanager/{id}`
+  _`REQUEST BRAND: GET http://localhost:8080/api/v1/devicemanager/search?brand={brand}`
 - UPDATE:
-  _REQUEST FULL: PUT http://localhost:8080/api/v1/devicemanager/{id}
+  _`REQUEST FULL: PUT http://localhost:8080/api/v1/devicemanager/{id}
            BODY: {
              "name": "S8",
              "brand": "Samsung"
-         }
-  _REQUEST PARTIAL: PATCH http://localhost:8080/api/v1/devicemanager/{id}
+         }`
+  _`REQUEST PARTIAL: PATCH http://localhost:8080/api/v1/devicemanager/{id}
            BODY: {
              "name": "S8",
-         }
+         }`
 - DELETE
-  _REQUEST: DELETE http://localhost:8080/api/v1/devicemanager/{id}
+  _`REQUEST: DELETE http://localhost:8080/api/v1/devicemanager/{id}`
 
 To further explore the application functionalities, you can access the swagger UI [http://localhost:8080/api-ui](link) 
 
