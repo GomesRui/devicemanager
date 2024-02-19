@@ -28,9 +28,9 @@ BODY: {
 
 Afterwards, multiple operations can be done:
 - READ:
-  REQUEST ALL: `GET http://localhost:8080/api/v1/devicemanager/`
-  REQUEST ID: `GET http://localhost:8080/api/v1/devicemanager/{id}`
-  REQUEST BRAND: `GET http://localhost:8080/api/v1/devicemanager/search?brand={brand}`
+-     REQUEST ALL: `GET http://localhost:8080/api/v1/devicemanager/`
+-     REQUEST ID: `GET http://localhost:8080/api/v1/devicemanager/{id}`
+-     REQUEST BRAND: `GET http://localhost:8080/api/v1/devicemanager/search?brand={brand}`
 - UPDATE:
   REQUEST FULL: `PUT http://localhost:8080/api/v1/devicemanager/{id}
            BODY: {
