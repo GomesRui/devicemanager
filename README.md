@@ -60,4 +60,4 @@ UI could be implemented with MVC architecture;
 
 ## License
 
-The purpose of this application was to resolve an exercise defined by 1GLOBAL.
+Not applicable.
