@@ -1,0 +1,9 @@
+com\global1\devicemanager\util\exception\FieldNotValidatedException.class
+com\global1\devicemanager\DevicemanagerApplication.class
+com\global1\devicemanager\model\Device.class
+com\global1\devicemanager\util\exception\DeviceNotDeletedException.class
+com\global1\devicemanager\controller\DevicemanagerController.class
+com\global1\devicemanager\service\DevicemanagerService.class
+com\global1\devicemanager\util\exception\FieldToUpdateNotFoundException.class
+com\global1\devicemanager\repository\DevicemanagerRepository.class
+com\global1\devicemanager\util\exception\DeviceNotFoundException.class
