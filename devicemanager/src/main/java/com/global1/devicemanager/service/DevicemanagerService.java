@@ -1,26 +1,24 @@
 package com.global1.devicemanager.service;
 
 import java.beans.PropertyDescriptor;
-import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.el.util.ReflectionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.Errors;
 
 import com.global1.devicemanager.model.Device;
 import com.global1.devicemanager.repository.DevicemanagerRepository;
-import com.global1.devicemanager.util.exception.DeviceNotDeletedException;
 import com.global1.devicemanager.util.exception.DeviceNotFoundException;
+import com.global1.devicemanager.util.exception.FieldNotValidatedException;
 import com.global1.devicemanager.util.exception.FieldToUpdateNotFoundException;
 
 @Service
 @Transactional
 public class DevicemanagerService {
-    
+
     @Autowired
     DevicemanagerRepository repo;
 
@@ -28,7 +26,10 @@ public class DevicemanagerService {
         return repo.findById(id).orElseThrow(() -> new DeviceNotFoundException(id));
     }
 
-    public List<Device> getDevice(String brand) {
+    public List<Device> getDevice(String brand, Errors errors) throws Exception {
+        if (errors != null && errors.hasErrors())
+            throw new FieldNotValidatedException(errors.getFieldError().getField(),
+                    errors.getFieldError().getDefaultMessage());
         return repo.findByBrand(brand);
     }
 
@@ -36,11 +37,18 @@ public class DevicemanagerService {
         return repo.findAll();
     }
 
-    public Device addDevice(Device device) {
+    public Device addDevice(Device device, Errors errors) throws Exception {
+        if (errors != null && errors.hasErrors())
+            throw new FieldNotValidatedException(errors.getFieldError().getField(),
+                    errors.getFieldError().getDefaultMessage());
         return repo.save(device);
     }
 
-    public Device updateDevice(Device device, Long id) throws Exception{
+    public Device updateDevice(Device device, Long id, Errors errors) throws Exception {
+        if (errors != null && errors.hasErrors())
+            throw new FieldNotValidatedException(errors.getFieldError().getField(),
+                    errors.getFieldError().getDefaultMessage());
+
         Device deviceToUpdate = repo.findById(id).orElseThrow(() -> new DeviceNotFoundException(id));
         if (deviceToUpdate != null) {
             deviceToUpdate.setBrand(device.getBrand());
@@ -50,10 +58,14 @@ public class DevicemanagerService {
         return repo.save(deviceToUpdate);
     }
 
-    public Device updateDevice(Map<String,Object> device, Long id) throws Exception{
+    public Device updateDevice(Map<String, Object> device, Long id, Errors errors) throws Exception {
+        if (errors != null && errors.hasErrors())
+            throw new FieldNotValidatedException(errors.getFieldError().getField(),
+                    errors.getFieldError().getDefaultMessage());
+
         Device deviceToUpdate = repo.findById(id).orElseThrow(() -> new DeviceNotFoundException(id));
         if (deviceToUpdate != null) {
-            device.forEach((k,v) -> {
+            device.forEach((k, v) -> {
                 try {
                     PropertyDescriptor pd = new PropertyDescriptor(k, Device.class);
                     pd.getWriteMethod().invoke(deviceToUpdate, v);
@@ -68,7 +80,7 @@ public class DevicemanagerService {
 
     public void deleteDevice(Long id) throws Exception {
         repo.deleteById(id);
-        getDevice(id);     
+        getDevice(id);
     }
 
 }

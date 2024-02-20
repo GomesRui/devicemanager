@@ -1,9 +1,6 @@
 package com.global1.devicemanager.model;
 
-import java.sql.Timestamp;
 import java.time.Instant;
-import java.time.LocalDateTime;
-
 import org.hibernate.annotations.CreationTimestamp;
 
 import jakarta.persistence.Column;
@@ -12,42 +9,41 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Table(name = "TBL_DEVICES")
-@Getter @NoArgsConstructor @AllArgsConstructor
-public class Device {  
-    @Id 
-	@GeneratedValue(strategy = GenerationType.SEQUENCE) 
+@Getter
+@NoArgsConstructor
+public class Device {
+	@Id
+	@GeneratedValue(strategy = GenerationType.SEQUENCE)
 	private Long id;
 
-    @Setter 
-    @NotNull
-    @NotBlank(message = "The device needs to have a name!")
-    @Column(updatable=true, unique=true)
-    private String name;
+	@Setter
+	@NotNull
+	@NotBlank(message = "The device needs to have a name!")
+	@Column(updatable = true, unique = true)
+	private String name;
 
-    @Setter 
-    @NotNull 
-    @NotBlank(message = "The device needs to have a brand!")
-    @Column(updatable=true)
-    private String brand;
+	@Setter
+	@NotNull
+	@NotBlank(message = "The device needs to have a brand!")
+	@Column(updatable = true)
+	private String brand;
 
-    @CreationTimestamp
-    private Instant created;
+	@CreationTimestamp
+	private Instant created;
 
-    public Device(String name, String brand) {
-        this.name = name;
-        this.brand = brand;
-    }
+	public Device(String name, String brand) {
+		this.name = name;
+		this.brand = brand;
+		this.created = Instant.now();
+	}
 
 	@Override
 	public int hashCode() {
@@ -71,11 +67,9 @@ public class Device {
 		Device other = (Device) obj;
 		if (other.id == this.id)
 			return true;
-		else
-			if (other.brand == this.brand && other.name == this.name)
-				return true;
+		else if (other.brand == this.brand && other.name == this.name)
+			return true;
 		return false;
 	}
 
-    
 }

@@ -3,41 +3,34 @@ package com.global1.devicemanager.controller;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.global1.devicemanager.model.Device;
 import com.global1.devicemanager.service.DevicemanagerService;
 import com.global1.devicemanager.util.exception.DeviceNotDeletedException;
 import com.global1.devicemanager.util.exception.DeviceNotFoundException;
+import com.global1.devicemanager.util.exception.FieldNotValidatedException;
 
 import jakarta.validation.Valid;
-import jakarta.websocket.server.PathParam;
-
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-
-
-
-
 
 @RestController
 @RequestMapping("/api/v1/devicemanager")
 public class DevicemanagerController {
-    
+
     @Autowired
     DevicemanagerService service;
 
@@ -51,7 +44,7 @@ public class DevicemanagerController {
     @GetMapping("/{id}")
     @ResponseStatus(value = HttpStatus.OK)
     public ResponseEntity<?> get(@PathVariable("id") Long id) {
-        
+
         ResponseEntity<?> response;
         try {
             Device device = service.getDevice(id);
@@ -66,27 +59,46 @@ public class DevicemanagerController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<Device>> get(@PathParam("brand") @Valid String brand) {
-        
-        return ResponseEntity.ok(service.getDevice(brand));
+    public ResponseEntity<?> get(@ModelAttribute("brand") @Valid String brand, Errors errors) {
+
+        ResponseEntity<?> response;
+        try {
+            response = ResponseEntity.ok(service.getDevice(brand, errors));
+        } catch (FieldNotValidatedException ex) {
+            response = ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+        } catch (Exception ex) {
+            response = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
+        }
+        return response;
     }
 
     // --- POST ---
     @PostMapping("/")
-    public ResponseEntity<Device> add(@RequestBody Device device) {
-        return ResponseEntity.ok(service.addDevice(device));
+    public ResponseEntity<?> add(@RequestBody @Valid Device device, Errors errors) {
+
+        ResponseEntity<?> response;
+        try {
+            response = ResponseEntity.ok(service.addDevice(device, errors));
+        } catch (FieldNotValidatedException ex) {
+            response = ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+        } catch (Exception ex) {
+            response = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
+        }
+        return response;
     }
 
     // --- PUT ---
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> fullUpdate(@PathVariable("id") Long id, @RequestBody @Valid Device device) {
+    public ResponseEntity<?> fullUpdate(@PathVariable("id") Long id, @RequestBody @Valid Device device, Errors errors) {
         ResponseEntity<?> response;
         try {
-            Device deviceUpdate = service.updateDevice(device, id);
+            Device deviceUpdate = service.updateDevice(device, id, errors);
             response = ResponseEntity.ok(deviceUpdate);
         } catch (DeviceNotFoundException ex) {
             response = ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+        } catch (FieldNotValidatedException ex) {
+            response = ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
         } catch (Exception ex) {
             response = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
         }
@@ -95,13 +107,16 @@ public class DevicemanagerController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<?> partialUpdate(@PathVariable("id") Long id, @RequestBody @Valid Map<String,Object> device) {
+    public ResponseEntity<?> partialUpdate(@PathVariable("id") Long id, @RequestBody @Valid Map<String, Object> device,
+            Errors errors) {
         ResponseEntity<?> response;
         try {
-            Device deviceUpdate = service.updateDevice(device, id);
+            Device deviceUpdate = service.updateDevice(device, id, errors);
             response = ResponseEntity.ok(deviceUpdate);
         } catch (DeviceNotFoundException ex) {
             response = ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+        } catch (FieldNotValidatedException ex) {
+            response = ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
         } catch (Exception ex) {
             response = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
         }
@@ -111,7 +126,8 @@ public class DevicemanagerController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable("id") Long id) {
-        ResponseEntity<?> response = ResponseEntity.status(HttpStatus.NOT_FOUND).body(new DeviceNotFoundException(id).getMessage());
+        ResponseEntity<?> response = ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(new DeviceNotFoundException(id).getMessage());
         try {
             service.deleteDevice(id);
         } catch (DeviceNotFoundException ex) {
